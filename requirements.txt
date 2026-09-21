@@ -1,0 +1,6 @@
+python-dotenv
+google-genai
+mcp[cli]
+langgraph
+chromadb
+rich
