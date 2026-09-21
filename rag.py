@@ -80,6 +80,9 @@ def build_index() -> int:
 
 
 def search_knowledge(query: str, n_results: int = 3) -> list[dict[str, str]]:
+    if collection.count() == 0:
+        return []
+
     query_embedding = embed_text(query)
 
     results = collection.query(
