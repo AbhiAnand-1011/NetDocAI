@@ -73,5 +73,16 @@ def http_request(url: str, timeout: float = 5.0) -> str:
                 f"Response time: {elapsed_ms:.2f} ms"
             )
 
-    except Exception as exc:
-        return f"HTTP request failed for {url}\nError: {exc}"
+        except HTTPError as exc:
+            elapsed_ms = (time.perf_counter() - start) * 1000
+
+            return (
+                f"HTTP response received\n"
+                f"URL: {url}\n"
+                f"Status: {exc.code}\n"
+                f"Content-Type: {exc.headers.get('Content-Type')}\n"
+                f"Response time: {elapsed_ms:.2f} ms"
+            )
+
+        except Exception as exc:
+            return f"HTTP request failed for {url}\nError: {exc}"
