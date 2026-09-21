@@ -62,8 +62,7 @@ LangGraph Agent
 - Gemini-powered embeddings
 - Gemini reasoning and tool selection
 - Retry handling for transient Gemini API failures
-- Structured terminal reports
-- Unit tests for core components
+- Structured terminal diagnostic reports
 
 ## Tech Stack
 
@@ -95,10 +94,6 @@ NetDocAI/
 │   ├── http.md
 │   ├── linux_networking.md
 │   └── tcp.md
-├── tests/
-│   ├── test_agent.py
-│   ├── test_rag.py
-│   └── test_tools.py
 ├── .env.example
 ├── .gitignore
 ├── requirements.txt
@@ -160,20 +155,6 @@ NetDocAI will investigate the problem and display a diagnostic report containing
 - the current assessment
 - the final diagnosis
 
-## Testing
-
-Run the complete test suite:
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-The tests cover:
-
-- agent routing logic
-- network diagnostic tools
-- RAG functionality
-
 ## Knowledge Base
 
 Networking documentation is stored in the `knowledge/` directory.
@@ -219,7 +200,7 @@ Possible extensions include:
 
 The Gemini API key is loaded from `.env` and should never be committed to Git.
 
-The generated ChromaDB database is also excluded from Git because it is a local runtime artifact.
+The generated ChromaDB database is excluded from Git because it is a local runtime artifact.
 
 ## Status
 
