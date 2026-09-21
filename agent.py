@@ -255,7 +255,7 @@ def route_after_plan(state: AgentState) -> str:
     if state["response"]:
         return "done"
 
-    if state["steps"] >= MAX_STEPS:
+    if state["steps"] > MAX_STEPS:
         return "finalize"
 
     return "execute"
