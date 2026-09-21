@@ -129,6 +129,18 @@ GEMINI_API_KEY=your_api_key_here
 GEMINI_MODEL=gemini-3.6-flash
 ```
 
+## Build the Knowledge Index
+
+The networking knowledge base is stored in the `knowledge/` directory and indexed into a local ChromaDB database.
+
+After creating your `.env` file, build the index:
+
+```bash
+python -c "from rag import build_index; print(f'Indexed {build_index()} knowledge chunks.')"
+```
+
+This creates the local `chroma_db/` runtime directory, which is intentionally excluded from Git.
+
 ## Running NetDocAI
 
 Start the CLI:
