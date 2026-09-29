@@ -72,9 +72,6 @@ LangGraph Agent
 - MCP
 - ChromaDB
 - Rich
-- Python `socket`
-- Python `subprocess`
-- Python `urllib`
 
 ## Project Structure
 
