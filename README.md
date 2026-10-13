@@ -62,8 +62,7 @@ LangGraph Agent
 - Gemini-powered embeddings
 - Gemini reasoning and tool selection
 - Retry handling for transient Gemini API failures
-- Structured terminal reports
-- Unit tests for core components
+- Structured terminal diagnostic reports
 
 ## Tech Stack
 
@@ -73,9 +72,6 @@ LangGraph Agent
 - MCP
 - ChromaDB
 - Rich
-- Python `socket`
-- Python `subprocess`
-- Python `urllib`
 
 ## Project Structure
 
@@ -95,10 +91,6 @@ NetDocAI/
 │   ├── http.md
 │   ├── linux_networking.md
 │   └── tcp.md
-├── tests/
-│   ├── test_agent.py
-│   ├── test_rag.py
-│   └── test_tools.py
 ├── .env.example
 ├── .gitignore
 ├── requirements.txt
@@ -134,6 +126,18 @@ GEMINI_API_KEY=your_api_key_here
 GEMINI_MODEL=gemini-3.6-flash
 ```
 
+## Build the Knowledge Index
+
+The networking knowledge base is stored in the `knowledge/` directory and indexed into a local ChromaDB database.
+
+After creating your `.env` file, build the index:
+
+```bash
+python -c "from rag import build_index; print(f'Indexed {build_index()} knowledge chunks.')"
+```
+
+This creates the local `chroma_db/` runtime directory, which is intentionally excluded from Git.
+
 ## Running NetDocAI
 
 Start the CLI:
@@ -160,20 +164,6 @@ NetDocAI will investigate the problem and display a diagnostic report containing
 - the current assessment
 - the final diagnosis
 
-## Testing
-
-Run the complete test suite:
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-The tests cover:
-
-- agent routing logic
-- network diagnostic tools
-- RAG functionality
-
 ## Knowledge Base
 
 Networking documentation is stored in the `knowledge/` directory.
@@ -186,43 +176,3 @@ Current topics include:
 - TCP
 
 The documents are chunked, embedded, and stored in ChromaDB for semantic retrieval.
-
-## Limitations
-
-NetDocAI is currently designed as a local CLI project and is intentionally small.
-
-It currently does not provide:
-
-- a web dashboard
-- distributed execution
-- long-term conversation memory
-- automated remediation
-- production-grade monitoring
-- large-scale knowledge ingestion
-
-Network diagnostics also depend on the environment in which the program is executed.
-
-## Future Improvements
-
-Possible extensions include:
-
-- richer network measurements
-- additional diagnostic tools
-- improved hypothesis tracking
-- larger networking knowledge bases
-- persistent investigation history
-- automated remediation suggestions
-- web-based observability
-- richer agent evaluation and benchmarking
-
-## Security Notes
-
-The Gemini API key is loaded from `.env` and should never be committed to Git.
-
-The generated ChromaDB database is also excluded from Git because it is a local runtime artifact.
-
-## Status
-
-NetDocAI is a portfolio-scale experimental project focused on combining:
-
-**LLM reasoning + LangGraph + MCP + RAG + real network diagnostics**

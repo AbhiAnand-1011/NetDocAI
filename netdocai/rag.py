@@ -122,6 +122,9 @@ def search_knowledge(
 ) -> list[dict[str, str]]:
     ensure_index()
 
+    if collection.count() == 0:
+        return []
+
     query_embedding = embed_text(query)
 
     results = collection.query(
