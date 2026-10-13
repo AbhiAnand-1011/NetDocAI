@@ -568,18 +568,4 @@ Bugs and feature requests can be submitted through the [GitHub Issues](https://g
 
 ---
 
-## Author
 
-**Abhishek Anand**
-
-GitHub: [AbhiAnand-1011](https://github.com/AbhiAnand-1011)
-
----
-
-## Project Repository
-
-[github.com/AbhiAnand-1011/NetDocAI](https://github.com/AbhiAnand-1011/NetDocAI)
-
----
-
-**NetDocAI — Autonomous network troubleshooting, directly from your terminal.**
