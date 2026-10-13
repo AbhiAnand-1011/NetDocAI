@@ -1,3 +1,5 @@
+import os
+import sys
 from pathlib import Path
 
 import chromadb
@@ -8,14 +10,30 @@ from config import settings
 
 
 BASE_DIR = Path(__file__).resolve().parent
-KNOWLEDGE_DIR = BASE_DIR / "knowledge"
-CHROMA_DIR = BASE_DIR / "chroma_db"
+
+SOURCE_KNOWLEDGE_DIR = BASE_DIR / "knowledge"
+INSTALLED_KNOWLEDGE_DIR = (
+    Path(sys.prefix) / "share" / "netdocai" / "knowledge"
+)
+
+KNOWLEDGE_DIR = (
+    SOURCE_KNOWLEDGE_DIR
+    if SOURCE_KNOWLEDGE_DIR.is_dir()
+    else INSTALLED_KNOWLEDGE_DIR
+)
+
+DATA_DIR = (
+    Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share")
+    .expanduser()
+    / "netdocai"
+)
+
+CHROMA_DIR = DATA_DIR / "chroma_db"
+
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 EMBEDDING_MODEL = "gemini-embedding-2"
 EMBEDDING_DIMENSIONS = 768
-
-
-client = genai.Client(api_key=settings.gemini_api_key)
 
 chroma_client = chromadb.PersistentClient(path=str(CHROMA_DIR))
 
@@ -26,13 +44,14 @@ collection = chroma_client.get_or_create_collection(
 
 
 def embed_text(text: str) -> list[float]:
-    result = client.models.embed_content(
-        model=EMBEDDING_MODEL,
-        contents=text,
-        config=types.EmbedContentConfig(
-            output_dimensionality=EMBEDDING_DIMENSIONS,
-        ),
-    )
+    with genai.Client(api_key=settings.gemini_api_key) as client:
+        result = client.models.embed_content(
+            model=EMBEDDING_MODEL,
+            contents=text,
+            config=types.EmbedContentConfig(
+                output_dimensionality=EMBEDDING_DIMENSIONS,
+            ),
+        )
 
     return result.embeddings[0].values
 
@@ -51,6 +70,11 @@ def chunk_text(text: str, chunk_size: int = 1000) -> list[str]:
 
 
 def build_index() -> int:
+    if not KNOWLEDGE_DIR.is_dir():
+        raise FileNotFoundError(
+            f"Knowledge directory not found: {KNOWLEDGE_DIR}"
+        )
+
     documents = []
     ids = []
     embeddings = []
@@ -67,7 +91,9 @@ def build_index() -> int:
             metadatas.append({"source": file_path.name})
 
     if not documents:
-        return 0
+        raise RuntimeError(
+            "No knowledge documents found for indexing."
+        )
 
     collection.upsert(
         ids=ids,
@@ -79,12 +105,28 @@ def build_index() -> int:
     return len(documents)
 
 
-def search_knowledge(query: str, n_results: int = 3) -> list[dict[str, str]]:
+def ensure_index() -> None:
+    if collection.count() > 0:
+        return
+
+    print("[RAG] Initializing knowledge base...")
+
+    count = build_index()
+
+    print(f"[RAG] Indexed {count} knowledge chunks.")
+
+
+def search_knowledge(
+    query: str,
+    n_results: int = 3,
+) -> list[dict[str, str]]:
+    ensure_index()
+
     query_embedding = embed_text(query)
 
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=n_results,
+        n_results=min(n_results, collection.count()),
     )
 
     documents = results.get("documents", [[]])[0]

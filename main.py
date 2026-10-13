@@ -4,7 +4,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
-from agent import run_agent
+from onboarding import get_api_key
 
 
 console = Console()
@@ -18,6 +18,19 @@ def main() -> None:
             expand=False,
         )
     )
+
+    console.print()
+
+    try:
+        get_api_key()
+    except (KeyboardInterrupt, EOFError):
+        console.print("\n[yellow]Setup cancelled.[/yellow]")
+        return
+    except OSError as exc:
+        console.print(f"\n[red]Configuration error: {exc}[/red]")
+        return
+
+    from agent import run_agent
 
     console.print()
 
@@ -57,7 +70,6 @@ def main() -> None:
                 border_style="green",
             )
         )
-
     except Exception as exc:
         console.print()
         console.print(

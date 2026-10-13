@@ -9,7 +9,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 from prompts import SYSTEM_PROMPT, build_user_prompt
-from report import build_report
+from netdocai_report import build_report
 
 
 MAX_STEPS = 8
@@ -46,7 +46,7 @@ def build_mcp_tools(
 async def get_tool_definitions() -> list[dict[str, Any]]:
     server_params = StdioServerParameters(
         command=sys.executable,
-        args=["mcp_server.py"],
+        args=["-m", "mcp_server"],
         env=os.environ.copy(),
     )
 
@@ -133,7 +133,7 @@ async def plan(state: AgentState) -> AgentState:
 async def execute_tools(state: AgentState) -> AgentState:
     server_params = StdioServerParameters(
         command=sys.executable,
-        args=["mcp_server.py"],
+        args=["-m", "mcp_server"],
         env=os.environ.copy(),
     )
 

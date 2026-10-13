@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netdocai"
+version = "0.1.0"
+description = "Autonomous AI-powered network troubleshooting CLI"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Abhishek Anand" }
+]
+
+dependencies = [
+    "python-dotenv",
+    "google-genai",
+    "mcp[cli]",
+    "langgraph",
+    "chromadb",
+    "rich"
+]
+
+[project.scripts]
+netdocai = "main:main"
+
+[tool.setuptools]
+py-modules = [
+    "main",
+    "onboarding",
+    "agent",
+    "config",
+    "gemini",
+    "mcp_server",
+    "prompts",
+    "rag",
+    "netdocai_report",
+    "tools"
+]
+
+[tool.setuptools.data-files]
+"share/netdocai/knowledge" = ["knowledge/*.md"]
