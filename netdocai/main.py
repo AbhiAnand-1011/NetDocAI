@@ -4,7 +4,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
-from onboarding import get_api_key
+from .onboarding import get_api_key
 
 
 console = Console()
@@ -30,7 +30,7 @@ def main() -> None:
         console.print(f"\n[red]Configuration error: {exc}[/red]")
         return
 
-    from agent import run_agent
+    from .agent import run_agent
 
     console.print()
 

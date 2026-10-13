@@ -1,7 +1,7 @@
 from mcp.server import MCPServer
 
-from rag import search_knowledge
-from tools import (
+from .rag import search_knowledge
+from .tools import (
     dns_lookup,
     http_request,
     ping_host,

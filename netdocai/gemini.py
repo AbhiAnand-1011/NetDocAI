@@ -5,7 +5,7 @@ from google import genai
 from google.genai import types
 from google.genai.errors import ClientError, ServerError
 
-from config import settings
+from .config import settings
 
 
 async def generate_content(

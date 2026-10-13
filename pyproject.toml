@@ -22,21 +22,12 @@ dependencies = [
 ]
 
 [project.scripts]
-netdocai = "main:main"
+netdocai = "netdocai.main:main"
 
-[tool.setuptools]
-py-modules = [
-    "main",
-    "onboarding",
-    "agent",
-    "config",
-    "gemini",
-    "mcp_server",
-    "prompts",
-    "rag",
-    "netdocai_report",
-    "tools"
-]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["netdocai"]
+namespaces = false
 
-[tool.setuptools.data-files]
-"share/netdocai/knowledge" = ["knowledge/*.md"]
+[tool.setuptools.package-data]
+netdocai = ["knowledge/*.md"]

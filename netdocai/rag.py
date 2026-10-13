@@ -6,7 +6,7 @@ import chromadb
 from google import genai
 from google.genai import types
 
-from config import settings
+from .config import settings
 
 
 BASE_DIR = Path(__file__).resolve().parent
