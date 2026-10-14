@@ -1,30 +1,62 @@
 # NetDocAI
 
-**An autonomous, AI-powered network troubleshooting agent for your terminal.**
+### Autonomous AI-Powered Network Troubleshooting CLI
 
-NetDocAI is a Python-based CLI tool that investigates network connectivity problems using real diagnostic tools, autonomous reasoning, and retrieval-augmented generation (RAG).
+NetDocAI is an autonomous network troubleshooting agent that investigates connectivity problems using real diagnostic tools, AI-powered reasoning, and retrieval-augmented generation (RAG).
 
-Built with **LangGraph, Model Context Protocol (MCP), Google Gemini, and ChromaDB**, NetDocAI combines traditional network diagnostics with an AI agent capable of selecting tools, analyzing their results, forming hypotheses, and generating structured diagnostic reports.
+Built with **Python, LangGraph, Model Context Protocol (MCP), Google Gemini, and ChromaDB**, NetDocAI allows users to diagnose network issues directly from their terminal using natural language.
 
-Instead of manually running multiple networking commands and interpreting their outputs, users can describe their problem in natural language and let NetDocAI investigate.
+Instead of manually executing multiple networking commands and interpreting their outputs, users can describe a problem and let NetDocAI investigate.
+
+The agent selects appropriate diagnostic tools, analyzes the collected evidence, develops hypotheses, and generates structured troubleshooting reports.
 
 ---
 
 ## Features
 
-- **Autonomous Troubleshooting:** Uses a LangGraph-based agent to plan, execute, and evaluate network diagnostics.
-- **Natural Language Interface:** Describe networking problems directly in the terminal.
-- **MCP Tool Integration:** Diagnostic utilities are exposed through a local Model Context Protocol server.
-- **DNS Diagnostics:** Resolve domain names and inspect DNS resolution results.
-- **Ping Diagnostics:** Check host reachability using ICMP.
-- **TCP Connectivity Testing:** Test connectivity to specific hosts and ports.
-- **HTTP Diagnostics:** Inspect HTTP responses and connection failures.
-- **RAG-Powered Knowledge Retrieval:** Retrieve relevant information from bundled networking documentation.
-- **Persistent Vector Database:** Store and retrieve knowledge embeddings using ChromaDB.
-- **Gemini Integration:** Use Google Gemini for reasoning, tool selection, and knowledge embeddings.
-- **First-Run API Key Setup:** Configure your own Gemini API key through an interactive onboarding interface.
-- **Automatic Knowledge Indexing:** Initialize the knowledge base when retrieval is first requested.
-- **Structured Diagnostic Reports:** Receive an organized summary of observations, retrieved knowledge, assessments, and conclusions.
+### Autonomous Network Troubleshooting
+
+- LangGraph-based agent for stateful diagnostic workflows.
+- Gemini-powered reasoning and tool selection.
+- Autonomous execution of network diagnostic tools.
+- Evidence-based hypothesis generation and assessment.
+- Multi-step investigation with configurable execution limits.
+- Structured diagnostic reports.
+
+### Network Diagnostic Tools
+
+NetDocAI provides five MCP tools:
+
+| Tool | Description |
+|------|-------------|
+| `ping` | Tests host reachability using ICMP |
+| `dns` | Resolves domain names and retrieves DNS information |
+| `tcp` | Tests TCP connectivity to specific hosts and ports |
+| `http` | Performs HTTP requests and inspects responses |
+| `search_docs` | Retrieves relevant networking documentation using RAG |
+
+All diagnostic tools are exposed through a local Model Context Protocol server.
+
+### AI and Knowledge Retrieval
+
+- Google Gemini integration for autonomous reasoning.
+- Configurable Gemini reasoning model.
+- Gemini embeddings for semantic knowledge retrieval.
+- ChromaDB for persistent vector storage.
+- Bundled networking documentation.
+- Automatic knowledge-base initialization.
+- RAG-powered contextual assistance.
+
+### CLI Experience
+
+- Interactive terminal interface built with Rich.
+- Natural-language problem descriptions.
+- First-time Gemini API key onboarding.
+- API key validation and local credential storage.
+- User-selectable Gemini models.
+- Persistent model preferences.
+- CLI command for changing models.
+- Installable Python package distributed through PyPI.
 
 ---
 
@@ -33,142 +65,220 @@ Instead of manually running multiple networking commands and interpreting their 
 ### Requirements
 
 - Python 3.11 or newer
-- Internet connectivity for Gemini API requests
-- A Google Gemini API key
-- Network access for running diagnostics
-- `pipx` (recommended for CLI installation)
+- Internet connectivity
+- Google Gemini API key
+- `pipx` (recommended)
 
-NetDocAI executes its diagnostic tools locally. Internet connectivity is required for AI inference and for diagnostics involving external network resources.
-
-### Install from GitHub
-
-NetDocAI can be installed directly from its GitHub repository using `pipx`:
-
-```bash
-pipx install git+https://github.com/AbhiAnand-1011/NetDocAI.git
-```
-
-Once installed, launch the application:
-
-```bash
-netdocai
-```
+NetDocAI has been tested on Linux and Windows.
 
 ### Install from PyPI
 
-After the first PyPI release, NetDocAI will also be available through:
+Install NetDocAI using pipx:
 
 ```bash
 pipx install netdocai
 ```
 
-Alternatively, it can be installed using `pip` inside a Python virtual environment:
+Launch the application:
+
+```bash
+netdocai
+```
+
+Alternatively, install using pip inside a Python virtual environment:
 
 ```bash
 pip install netdocai
 ```
 
-**Note:** PyPI distribution is being prepared. Until the package is published, use the GitHub installation method above.
+### Install from GitHub
+
+To install the latest development version directly from GitHub:
+
+```bash
+pipx install git+https://github.com/AbhiAnand-1011/NetDocAI.git
+```
+
+### Upgrade NetDocAI
+
+To upgrade an existing pipx installation:
+
+```bash
+pipx upgrade netdocai
+```
 
 ---
 
 ## First-Time Setup
 
-NetDocAI uses Google's Gemini API for autonomous reasoning, tool selection, and knowledge embeddings.
+NetDocAI uses Google's Gemini API for AI reasoning, diagnostic planning, and knowledge embeddings.
 
 Each user must configure their own Gemini API key.
 
-When launching NetDocAI for the first time:
+### Step 1: Obtain a Gemini API Key
+
+Generate an API key using Google AI Studio:
+
+**[Get a Gemini API Key](https://aistudio.google.com/apikey)**
+
+### Step 2: Launch NetDocAI
 
 ```bash
 netdocai
 ```
 
-The CLI displays an onboarding interface containing a link to Google AI Studio.
-
-**Get your Gemini API key:** https://aistudio.google.com/apikey
-
-The application then prompts you to enter your API key.
-
-NetDocAI attempts to validate the key before saving it. If Google's API is temporarily unavailable or rate-limited, the application allows you to decide whether to save the key without verification.
-
-### API Key Storage
-
-On Linux, API keys entered during onboarding are stored locally at:
+If no API key is configured, NetDocAI displays its onboarding interface.
 
 ```text
-~/.config/netdocai/api_key
+╭──────────────────────────────────────╮
+│ Welcome to NetDocAI!                 │
+│                                      │
+│ To get started, you need a Google    │
+│ Gemini API key.                      │
+│                                      │
+│ https://aistudio.google.com/apikey   │
+╰──────────────────────────────────────╯
+
+Enter your Gemini API key:
 ```
 
-The application creates the configuration directory and restricts access to the credential file using filesystem permissions.
+Enter your API key and press Enter.
 
-The key is stored as plaintext in a user-restricted file, not encrypted.
+The input is hidden for security. Typed or pasted characters will not appear in the terminal.
 
-NetDocAI also supports reading an API key from the `GEMINI_API_KEY` environment variable or an existing `.env` configuration.
+NetDocAI attempts to validate the key before saving it.
 
-**You do not need to manually create a `.env` file when using the interactive onboarding system.**
+If Google's API is temporarily unavailable or rate-limited, users can choose whether to save the key without verification.
 
-The API key is used to communicate with Google's Gemini API. NetDocAI does not require an account on a separate NetDocAI service.
+### Step 3: Configure the Gemini Model
 
-**Note:** The API key input is hidden for security. Characters will not appear while typing or pasting. Press Enter after entering your key.
+Starting with v0.1.1, NetDocAI supports interactive Gemini model selection.
+
+If no model preference has been configured, the application prompts the user to choose a model.
+
+```text
+Gemini Model Configuration
+
+Default: gemini-3.6-flash
+
+Gemini model (gemini-3.6-flash): gemini-2.5-flash
+
+✓ Model configured: gemini-2.5-flash
+```
+
+Press Enter without typing a model name to use the default.
+
+The selected model is saved locally and reused during subsequent executions.
+
+---
+
+## Gemini Model Configuration
+
+NetDocAI allows users to select their preferred Gemini model without modifying the source code.
+
+### Default Model
+
+The default reasoning model is:
+
+```text
+gemini-3.6-flash
+```
+
+### Change the Gemini Model
+
+Starting with v0.1.1, users can change their model at any time using:
+
+```bash
+netdocai config model
+```
+
+Example:
+
+```text
+Current model: gemini-2.5-flash
+
+Enter new Gemini model: gemini-2.5-pro
+
+✓ Model updated successfully: gemini-2.5-pro
+```
+
+The new preference is saved locally.
+
+Users do not need to re-enter their API key when changing models.
+
+### Model Selection Priority
+
+NetDocAI determines the reasoning model using the following priority:
+
+| Priority | Configuration Source |
+|----------|----------------------|
+| 1 | `GEMINI_MODEL` environment variable |
+| 2 | Locally saved model preference |
+| 3 | Default model |
+
+On Linux, the model preference is stored at:
+
+```text
+~/.config/netdocai/model
+```
+
+### Model Compatibility
+
+NetDocAI accepts user-provided Gemini model identifiers without performing capability validation.
+
+Users can select models supported by their Gemini API access.
+
+If a model does not support an operation required by NetDocAI, Google's API may return an error.
+
+NetDocAI does not automatically switch models or maintain a predefined list of compatible models.
+
+The selected model controls AI reasoning and tool selection. The RAG embedding model is configured separately.
 
 ---
 
 ## Usage
 
-Start NetDocAI from your terminal:
+Launch NetDocAI:
 
 ```bash
 netdocai
 ```
 
-The CLI prompts you to describe your network problem.
+Describe the network issue when prompted.
 
-For example:
+### Example 1: Website Connectivity
 
 ```text
 Describe your network problem: google.com is not working
 ```
 
-Other example problems include:
+### Example 2: DNS Problems
 
 ```text
-I can ping google.com but cannot access it through HTTPS.
+Describe your network problem: My DNS resolution keeps failing.
 ```
+
+### Example 3: TCP Connectivity
 
 ```text
-My DNS resolution seems to be failing.
+Describe your network problem: I cannot connect to github.com on port 443.
 ```
+
+### Example 4: HTTP Connectivity
 
 ```text
-I cannot establish a TCP connection to github.com on port 443.
+Describe your network problem: I can ping a website but cannot access it through HTTPS.
 ```
 
-```text
-Some websites are reachable, but others keep timing out.
-```
+NetDocAI uses Gemini to analyze the request and determine which diagnostic tools to execute.
 
-NetDocAI determines which diagnostic tools to execute based on the problem and the evidence collected during the investigation.
-
-The specific diagnostic sequence can vary between runs.
-
-### Diagnostic Workflow
-
-During an investigation, NetDocAI may:
-
-1. Resolve domain names through DNS.
-2. Test host reachability using ICMP ping.
-3. Check TCP connectivity on relevant ports.
-4. Perform HTTP requests.
-5. Retrieve relevant networking documentation.
-6. Assess the collected evidence.
-7. Continue investigating or produce a final diagnostic report.
-
-A simplified execution trace may look like:
+### Example Execution
 
 ```text
 NetDocAI
 Autonomous Network Troubleshooter
+
+Using Gemini model: gemini-2.5-flash
 
 Describe your network problem: google.com is not working
 
@@ -187,184 +297,221 @@ Investigating...
 [Agent] Finalizing diagnosis...
 ```
 
-Tool selection and execution depend on the agent's decisions and the reported problem.
+The diagnostic sequence depends on the problem and the agent's decisions.
+
+After investigating, NetDocAI displays a structured diagnostic report.
 
 ---
 
 ## Architecture
 
-NetDocAI combines a stateful LangGraph agent, Gemini reasoning, MCP diagnostic tools, and a local RAG knowledge base.
+NetDocAI combines LangGraph-based agent orchestration, Gemini reasoning, MCP diagnostic tools, and retrieval-augmented generation.
 
 ```text
-                        User
-                         |
-                         v
+                         USER
+                           |
+                           v
                     NetDocAI CLI
-                         |
-                         v
-                  LangGraph Agent
-                         |
-                         v
-                   Gemini Reasoning
-                         |
-              +----------+----------+
-              |                     |
-              v                     v
-          MCP Server          Agent Assessment
-              |                     |
-      +-------+-------+             |
-      |       |       |             |
-      v       v       v             |
-     DNS     Ping     TCP           |
-      |       |       |             |
-      +-------+-------+             |
-              |                     |
-              v                     |
-             HTTP                   |
-              |                     |
-              v                     |
-          search_docs               |
-              |                     |
-              v                     |
-          ChromaDB                  |
-              |                     |
-              v                     |
-       Gemini Embeddings            |
-              |                     |
-              +----------+----------+
-                         |
-                         v
-                  Evidence Analysis
-                         |
-                         v
-                 Diagnostic Report
+                           |
+                           v
+                 Configuration Setup
+                  API Key + Model
+                           |
+                           v
+                    LangGraph Agent
+                           |
+                           v
+                     Gemini API
+                           |
+                           v
+                 Diagnostic Planning
+                           |
+                           v
+                     MCP Client
+                           |
+                           v
+                      MCP Server
+                           |
+          +----------------+----------------+
+          |                |                |
+          v                v                v
+        Ping              DNS              TCP
+          |                |                |
+          +----------------+----------------+
+                           |
+                    +------+------+
+                    |             |
+                    v             v
+                   HTTP       search_docs
+                                  |
+                                  v
+                             RAG Pipeline
+                                  |
+                                  v
+                               ChromaDB
+                                  |
+                                  v
+                         Knowledge Documents
+                           |
+                           v
+                    Tool Observations
+                           |
+                           v
+                    Agent Assessment
+                           |
+                           v
+                 Continue or Finalize
+                           |
+                           v
+                    Diagnostic Report
 ```
+
+The diagram illustrates the major components. The agent can invoke available diagnostic tools independently based on its reasoning.
 
 ### LangGraph Agent
 
 The LangGraph agent maintains the investigation state, including:
 
-- The original networking problem
-- Conversation and tool-call history
+- User-provided networking problem
+- Conversation history
 - Available MCP tools
-- Pending tool executions
-- Collected observations
-- Current diagnostic hypothesis
-- Investigation progress
-- Final response
+- Pending tool calls
+- Diagnostic observations
+- Current hypothesis
+- Agent responses
+- Investigation step count
 
-The workflow consists of four primary nodes:
+The workflow includes four primary nodes:
 
 | Node | Responsibility |
-|---|---|
-| `plan` | Uses Gemini to reason about the problem and select tools |
-| `execute_tools` | Executes selected MCP tools and records observations |
-| `assess` | Evaluates diagnostic evidence and updates the hypothesis |
-| `finalize` | Produces a report when the investigation reaches its configured step limit |
+|------|----------------|
+| `plan` | Uses Gemini to select diagnostic tools or produce a conclusion |
+| `execute_tools` | Executes MCP tools and records their results |
+| `assess` | Analyzes evidence and updates the diagnostic hypothesis |
+| `finalize` | Generates a report when the investigation reaches its step limit |
 
-The agent can repeat the planning and assessment process until it reaches a conclusion or its diagnostic step limit.
+The agent can repeat the planning and assessment process as additional diagnostic evidence becomes available.
 
-### Model Context Protocol (MCP)
+### Model Context Protocol
 
-NetDocAI uses MCP to expose its networking utilities to the agent.
+NetDocAI uses MCP to separate the agent's reasoning workflow from the implementation of network diagnostic tools.
 
-The MCP server runs locally as a Python subprocess and communicates with the agent using standard input and output.
+The MCP server runs locally as a Python subprocess.
 
-Five tools are currently available:
+The agent communicates with the server using MCP over standard input and output.
 
-| Tool | Description |
-|---|---|
-| `ping` | Tests host reachability using ICMP |
-| `dns` | Resolves a hostname to its IP addresses |
-| `tcp` | Tests TCP connectivity to a specified host and port |
-| `http` | Performs an HTTP request and returns response information |
-| `search_docs` | Retrieves relevant networking documentation through RAG |
-
-These tools perform actual diagnostic operations rather than simulated checks.
-
-### Retrieval-Augmented Generation (RAG)
-
-NetDocAI includes a networking knowledge base used to support its diagnostic reasoning.
-
-The retrieval pipeline consists of:
-
-1. Reading bundled Markdown documentation.
-2. Dividing the documents into text chunks.
-3. Generating embeddings using Google's Gemini embedding model.
-4. Storing the embeddings in ChromaDB.
-5. Performing semantic searches against the indexed documents.
-6. Returning relevant documentation to the agent through MCP.
-
-The vector database is stored locally and reused between executions.
-
-Knowledge indexing is triggered automatically when the RAG search tool is used and the collection is empty.
-
-**Gemini API access is required for embedding generation.** Initial indexing may require multiple embedding requests.
+This architecture allows diagnostic tools to be discovered and executed through a consistent interface.
 
 ---
 
-## Knowledge Base
+## Retrieval-Augmented Generation
 
-NetDocAI ships with networking documentation covering four areas:
+NetDocAI includes a local networking knowledge base to support diagnostic investigations.
 
-| Document | Topic |
-|---|---|
-| `dns.md` | Domain Name System and name resolution |
-| `tcp.md` | TCP connections and networking concepts |
-| `http.md` | HTTP communication and related diagnostics |
-| `linux_networking.md` | Linux networking fundamentals and troubleshooting |
+The RAG implementation uses:
 
-The documents are bundled with the Python package.
+- Bundled Markdown documentation
+- Text chunking
+- Gemini embeddings
+- ChromaDB vector storage
+- Semantic similarity search
+- MCP-based knowledge retrieval
 
-Users do not need to download them separately or manually create the ChromaDB collection.
+### Retrieval Workflow
+
+```text
+Networking Documentation
+          |
+          v
+      Text Chunking
+          |
+          v
+     Gemini Embeddings
+          |
+          v
+        ChromaDB
+          |
+          v
+    Semantic Retrieval
+          |
+          v
+       search_docs
+          |
+          v
+     LangGraph Agent
+```
+
+### Automatic Knowledge Indexing
+
+NetDocAI automatically initializes its knowledge index when the `search_docs` tool is used and the ChromaDB collection is empty.
+
+The indexing process:
+
+1. Reads bundled Markdown documents.
+2. Splits the documents into chunks.
+3. Generates embeddings.
+4. Stores the resulting vectors in ChromaDB.
+5. Makes the indexed knowledge available for semantic retrieval.
+
+The database is reused across application executions.
+
+No manual indexing command is required.
+
+### Knowledge Base
+
+The bundled documentation covers:
+
+| Document | Subject |
+|----------|---------|
+| `dns.md` | DNS resolution and troubleshooting |
+| `tcp.md` | TCP networking and connectivity |
+| `http.md` | HTTP communication and diagnostics |
+| `linux_networking.md` | Linux networking fundamentals |
 
 ### Local Database Storage
 
-On Linux, the default ChromaDB storage location is:
+On Linux, ChromaDB data is stored at:
 
 ```text
 ~/.local/share/netdocai/chroma_db/
 ```
 
-NetDocAI supports the `XDG_DATA_HOME` environment variable for configuring its application-data location.
-
-The vector database persists across application launches.
+The application also supports the `XDG_DATA_HOME` environment variable for configuring its data-storage location.
 
 ---
 
 ## Diagnostic Reports
 
-After an investigation, NetDocAI generates a structured report.
+NetDocAI generates structured reports using observations collected during the investigation.
 
-Reports contain the following sections:
+Reports contain:
 
 | Section | Description |
-|---|---|
-| Problem | The original issue provided by the user |
-| Network Observations | Results collected from diagnostic tools |
-| Knowledge Retrieved | Sources retrieved from the networking knowledge base |
-| Current Assessment | The agent's current hypothesis based on available evidence |
-| Diagnosis | The final conclusion or investigation-limit message |
+|---------|-------------|
+| Problem | Original networking issue |
+| Network Observations | Results of executed diagnostic tools |
+| Knowledge Retrieved | Documentation sources retrieved through RAG |
+| Current Assessment | Agent's current hypothesis |
+| Diagnosis | Final conclusion or investigation-limit message |
 
-The report is displayed directly in the terminal using Rich.
-
-Diagnoses are generated from the information available during execution and may not always identify the underlying problem conclusively.
+Reports are displayed directly in the terminal using Rich.
 
 ---
 
 ## Tech Stack
 
 | Technology | Purpose |
-|---|---|
-| Python | Application implementation |
-| LangGraph | Stateful agent workflow and execution |
-| Google Gemini API | AI reasoning and tool selection |
+|------------|---------|
+| Python | Application development |
+| LangGraph | Stateful agent orchestration |
+| Google Gemini | Reasoning and diagnostic planning |
 | Google Gen AI SDK | Gemini API integration |
 | Model Context Protocol | Diagnostic tool communication |
-| ChromaDB | Persistent vector storage and retrieval |
-| Gemini Embeddings | Semantic embedding generation |
-| Rich | Terminal interface and formatted output |
-| setuptools | Python package building and distribution |
+| ChromaDB | Vector database and knowledge retrieval |
+| Gemini Embeddings | Semantic text embeddings |
+| Rich | Terminal interface |
+| setuptools | Python packaging |
+| GitHub Actions | Automated PyPI publishing |
 
 ---
 
@@ -392,6 +539,10 @@ NetDocAI/
 │       ├── linux_networking.md
 │       └── tcp.md
 │
+├── .github/
+│   └── workflows/
+│       └── release.yml
+│
 ├── knowledge/
 ├── .env.example
 ├── .gitignore
@@ -400,20 +551,20 @@ NetDocAI/
 └── README.md
 ```
 
-### Key Modules
+### Core Modules
 
-- **`agent.py`** — LangGraph agent definition, planning, tool execution, and assessment.
-- **`config.py`** — Gemini configuration and environment-based settings.
-- **`gemini.py`** — Asynchronous Gemini API communication and retry handling.
-- **`main.py`** — Rich-based terminal interface and CLI entry point.
-- **`mcp_server.py`** — Local MCP server and registered diagnostic tools.
-- **`onboarding.py`** — First-time API key configuration and validation.
-- **`prompts.py`** — Agent instructions and prompt construction.
-- **`rag.py`** — Knowledge indexing, embeddings, ChromaDB, and retrieval.
-- **`report.py`** — Structured diagnostic report generation.
-- **`tools.py`** — Network diagnostic implementations.
-
-The packaged application uses the documentation inside `netdocai/knowledge/`.
+| Module | Responsibility |
+|--------|----------------|
+| `agent.py` | LangGraph workflow and diagnostic reasoning |
+| `config.py` | Gemini configuration and model preferences |
+| `gemini.py` | Asynchronous Gemini API integration and retries |
+| `main.py` | CLI entry point and model configuration commands |
+| `mcp_server.py` | MCP server and tool registration |
+| `onboarding.py` | API key onboarding and model selection |
+| `prompts.py` | System instructions and prompt construction |
+| `rag.py` | Knowledge indexing and retrieval |
+| `report.py` | Diagnostic report generation |
+| `tools.py` | Network diagnostic implementations |
 
 ---
 
@@ -428,14 +579,21 @@ cd NetDocAI
 
 ### Create a Virtual Environment
 
-On Linux:
+#### Linux
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### Install the Package in Editable Mode
+#### Windows PowerShell
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### Install in Editable Mode
 
 ```bash
 python -m pip install -e .
@@ -447,61 +605,97 @@ python -m pip install -e .
 netdocai
 ```
 
-The same first-time API key onboarding flow is available during development.
+### Configure the Gemini Model
+
+Starting with v0.1.1:
+
+```bash
+netdocai config model
+```
 
 ### Build the Distribution
 
-Install the Python build tool:
+Install the build tool:
 
 ```bash
 python -m pip install build
 ```
 
-Build the source distribution and wheel:
+Build the wheel and source distribution:
 
 ```bash
 python -m build
 ```
 
-Generated distribution files are placed in the `dist/` directory.
+Generated distribution files are placed in:
 
-The wheel includes the `netdocai` Python package and its bundled networking documentation.
+```text
+dist/
+```
 
 ---
 
 ## Configuration
 
-NetDocAI supports the following environment variables:
+NetDocAI supports environment-based configuration and locally saved user preferences.
 
-| Variable | Purpose |
-|---|---|
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
 | `GEMINI_API_KEY` | Gemini API credential |
-| `GEMINI_MODEL` | Override the configured Gemini reasoning model |
-| `XDG_CONFIG_HOME` | Override the application configuration directory |
-| `XDG_DATA_HOME` | Override the local application-data directory |
+| `GEMINI_MODEL` | Gemini reasoning model override |
+| `XDG_CONFIG_HOME` | Application configuration directory |
+| `XDG_DATA_HOME` | Application data-storage directory |
 
-When no Gemini API key is available through the environment or previously saved configuration, NetDocAI launches its interactive onboarding flow.
+### Local Configuration
 
-Users are responsible for their own Gemini API usage and any applicable charges.
+On Linux, NetDocAI stores user configuration under:
+
+```text
+~/.config/netdocai/
+```
+
+The directory may contain:
+
+```text
+api_key
+model
+```
+
+The API key is stored as plaintext with restricted filesystem permissions.
+
+Saved model preferences are loaded automatically during subsequent executions.
+
+If an API key is already provided through the environment, NetDocAI uses it without prompting for a new key.
 
 ---
 
-
 ## Troubleshooting
 
-### Gemini API Key Not Configured
+### API Key Not Configured
 
-Launch NetDocAI:
+Run:
 
 ```bash
 netdocai
 ```
 
-If no API key is found, the onboarding interface will request one.
+NetDocAI launches onboarding when no API key is available.
 
-Obtain a key from:
+Generate an API key using:
 
-https://aistudio.google.com/apikey
+[Google AI Studio](https://aistudio.google.com/apikey)
+
+### Change the Gemini Model
+
+Starting with v0.1.1:
+
+```bash
+netdocai config model
+```
+
+Enter a new model identifier when prompted.
 
 ### Gemini API Rate Limit
 
@@ -511,7 +705,7 @@ If Gemini returns:
 429 RESOURCE_EXHAUSTED
 ```
 
-Your API project may have reached its applicable request quota.
+Your Gemini API project may have reached its applicable request quota.
 
 Check your usage and rate limits through Google AI Studio.
 
@@ -523,49 +717,49 @@ If Gemini returns:
 503 UNAVAILABLE
 ```
 
-The requested model may be temporarily unavailable or experiencing high demand.
+The requested Gemini model may be temporarily unavailable.
 
-NetDocAI includes retry handling for transient Gemini API failures.
+NetDocAI includes retry handling for transient API failures.
 
-### First-Time Knowledge Indexing
+### Knowledge Index Initialization
 
-The first RAG search may take longer because NetDocAI needs to generate embeddings and populate its local ChromaDB collection.
+The first RAG search may take longer because NetDocAI generates embeddings and initializes the ChromaDB collection.
 
-Subsequent searches reuse the stored index.
-
-Indexing may fail if the Gemini embedding API is unavailable or its applicable quota is exhausted.
-
----
-
-## Future Improvements
-
-Potential future development areas include:
-
-- Additional network diagnostic tools
-- Support for multiple LLM providers
-- More comprehensive networking documentation
-- Improved error handling and retry strategies
-- More flexible CLI arguments and configuration commands
-- Improved cross-platform compatibility
-- Expanded automated testing
-
-These are planned possibilities rather than features currently implemented.
+Once indexed, the stored knowledge is reused.
 
 ---
 
 ## Contributing
 
-Contributions, issue reports, and suggestions are welcome.
+Contributions, bug reports, and suggestions are welcome.
 
 To contribute:
 
 1. Fork the repository.
-2. Create a branch for your changes.
-3. Implement and test your modifications.
-4. Open a pull request describing your changes.
+2. Create a development branch.
+3. Implement and test your changes.
+4. Open a pull request describing your modifications.
 
-Bugs and feature requests can be submitted through the [GitHub Issues](https://github.com/AbhiAnand-1011/NetDocAI/issues) page.
+Bug reports and feature requests can be submitted through:
+
+[GitHub Issues](https://github.com/AbhiAnand-1011/NetDocAI/issues)
 
 ---
 
+## Author
 
+**Abhishek Anand**
+
+GitHub: [AbhiAnand-1011](https://github.com/AbhiAnand-1011)
+
+---
+
+## Links
+
+- **GitHub:** https://github.com/AbhiAnand-1011/NetDocAI
+- **PyPI:** https://pypi.org/project/netdocai/
+- **Gemini API Key:** https://aistudio.google.com/apikey
+
+---
+
+**NetDocAI — Autonomous network troubleshooting, directly from your terminal.**
