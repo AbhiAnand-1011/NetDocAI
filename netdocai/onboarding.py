@@ -8,17 +8,21 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
+from .config import DEFAULT_GEMINI_MODEL
+
+
 console = Console()
 
 API_KEY_URL = "https://aistudio.google.com/apikey"
 
 CONFIG_DIR = (
-    Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
     .expanduser()
     / "netdocai"
 )
 
 KEY_FILE = CONFIG_DIR / "api_key"
+MODEL_FILE = CONFIG_DIR / "model"
 
 
 def validate_api_key(api_key: str) -> bool | None:
@@ -55,21 +59,29 @@ def validate_api_key(api_key: str) -> bool | None:
         return None
 
 
-def save_api_key(api_key: str) -> None:
+def save_config(path: Path, value: str) -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
 
     os.chmod(CONFIG_DIR, 0o700)
 
     fd = os.open(
-        KEY_FILE,
+        path,
         os.O_WRONLY | os.O_CREAT | os.O_TRUNC,
         0o600,
     )
 
     with os.fdopen(fd, "w", encoding="utf-8") as file:
-        file.write(api_key)
+        file.write(value)
 
-    os.chmod(KEY_FILE, 0o600)
+    os.chmod(path, 0o600)
+
+
+def save_api_key(api_key: str) -> None:
+    save_config(KEY_FILE, api_key)
+
+
+def save_model(model: str) -> None:
+    save_config(MODEL_FILE, model)
 
 
 def get_api_key() -> str:
@@ -146,3 +158,54 @@ def get_api_key() -> str:
             )
 
         return api_key
+
+
+def get_model() -> str:
+    load_dotenv()
+
+    model = os.getenv("GEMINI_MODEL", "").strip()
+
+    if model:
+        return model
+
+    if MODEL_FILE.is_file():
+        model = MODEL_FILE.read_text(encoding="utf-8").strip()
+
+        if model:
+            os.environ["GEMINI_MODEL"] = model
+            return model
+
+    return configure_model()
+
+
+def configure_model() -> str:
+    console.print(
+        Panel(
+            "[bold cyan]Gemini Model Configuration[/bold cyan]\n\n"
+            "Choose the Gemini model NetDocAI should use.\n\n"
+            f"[bold]Default:[/bold] {DEFAULT_GEMINI_MODEL}\n\n"
+            "[dim]Enter a Gemini model ID, or press Enter "
+            "to use the default model.[/dim]",
+            title="Model Setup",
+            border_style="cyan",
+            expand=False,
+        )
+    )
+
+    model = Prompt.ask(
+        "\n[bold green]Gemini model[/bold green]",
+        default=DEFAULT_GEMINI_MODEL,
+    ).strip()
+
+    if not model:
+        model = DEFAULT_GEMINI_MODEL
+
+    save_model(model)
+
+    os.environ["GEMINI_MODEL"] = model
+
+    console.print(
+        f"\n[bold green]✓ Model configured: {model}[/bold green]"
+    )
+
+    return model
